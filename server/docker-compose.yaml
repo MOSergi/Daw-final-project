@@ -1,0 +1,12 @@
+services:
+  project-daw-db:
+    image: mysql
+    restart: always
+    ports: 
+      - 3306:3306
+    container_name: daw-db
+    environment:
+      MYSQL_ROOT_PASSWORD : ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE : ${MYSQL_DATABASE}
+    volumes:
+      - ./mysql_volume:/var/lib/mysql  
