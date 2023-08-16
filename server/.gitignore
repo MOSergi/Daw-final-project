@@ -1,4 +1,4 @@
 /node_modules
 /mysql_volume
 /dist
-/.env
+.env
