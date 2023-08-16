@@ -1,15 +1,15 @@
 import { Request, Response } from "express"
 import { UsersService } from "./users.service";
+import { bodyValidator } from "../../utils/bodyValidator";
 
-const register = async (req : Request, res : Response)=>{
-    
-    //pending check if body values are null or undefined
-    const body = req.body;
+const createUser = async (req : Request, res : Response)=>{
 
-    const userCreated = await UsersService.register({
-        email : body.email,
-        name : body.name,
-        password : body.password
+    const [name, email, password] = bodyValidator(req, { requiredValues : ["name", "email", "password"] });
+
+    const userCreated = await UsersService.create({
+        email,
+        name,
+        password
     });
 
     res.status(200).json({
@@ -20,5 +20,5 @@ const register = async (req : Request, res : Response)=>{
 }
 
 export const UsersController = {
-    register
+    createUser
 }

@@ -3,11 +3,13 @@ import { User } from "./models/users.model";
 import { ErrorThrower } from "../../utils/errorThrower";
 import bcrypt from "bcryptjs" 
 
-const register = async (params : Register)=>{
+const create = async (params : Register)=>{
 
     const { email, name, password } = params;
 
-    //check email validation 
+    if (password.length < 8){
+        new ErrorThrower(400, "password cannot be less than 8 characters");
+    }
 
     const validEmail = await User.findAll({
         where : {
@@ -16,17 +18,20 @@ const register = async (params : Register)=>{
     });
 
     if (validEmail.length !== 0){
-        new ErrorThrower(401, "email already exists");
+        new ErrorThrower(400, "email already exists");
     }
 
     const encryptedPassword = bcrypt.hashSync(password, 10);
 
     const userCreated = await User.create({ name, email, password : encryptedPassword });
 
+    delete userCreated.dataValues.id;
+    delete userCreated.dataValues.password;
+
     return userCreated;
 
 }
 
 export const UsersService = {
-    register
+    create
 }

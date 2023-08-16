@@ -12,21 +12,7 @@ export class Server {
         await this.dbConnection();
         this.middleware();
         this.routes();
-        this.app.use((err : any, req : Request, res : Response, next : NextFunction)=>{
-            if (err){
-                //validate this
-                if (err.code !== null && err.code !== undefined){
-                    res.status(err.code).json({
-                        statusCode : err.code,
-                        message : err.message
-                    })
-                } else {
-                    res.status(500).json({
-                        err
-                    })
-                }
-            }
-        });
+        this.app.use(this.errorHandler);
     }
 
     private async dbConnection(){
@@ -36,13 +22,41 @@ export class Server {
 
         } catch (e : any){
             console.log(e);
-            console.log("Conenction refussed");
+            console.log("Connection refussed");
         }
     }
 
     private middleware(){
         this.app.use(express.json());
         this.app.use(cors());
+    }
+
+    private errorHandler(err : any, _req : Request, res : Response, next : NextFunction){
+
+        if (res.headersSent) {
+            return next(err)
+        }
+
+        if (err){
+            if (err.statusCode !== null && err.statusCode !== undefined){
+                res.status(err.statusCode).json({
+                    statusCode : err.statusCode,
+                    message : err.message
+                })
+            } else {
+                if (err.name === "SequelizeValidationError"){
+                    res.status(400).json({
+                        statusCode : 400,
+                        error : err.errors[0].message
+                    })
+                } else {
+                    res.status(500).json({
+                        statusCode : 500,
+                        message : "Unnexpected error",
+                    })
+                }
+            }
+        }
     }
 
     private routes(){

@@ -4,6 +4,6 @@ import { asyncHandler } from "../../utils/asynHandler";
 
 const usersRouter = Router();
 
-usersRouter.post("/", asyncHandler(UsersController.register));
+usersRouter.post("/", asyncHandler(UsersController.createUser));
 
 export default usersRouter;

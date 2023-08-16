@@ -17,10 +17,7 @@ export const User = sequelize.define('User', {
         }
     },
     password : {
-        type : DataTypes.STRING,
-        validate : {
-            min : 8
-        }
+        type : DataTypes.STRING
     }
 }); 
 
