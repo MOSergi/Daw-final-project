@@ -45,8 +45,8 @@ export class Server {
                 })
             } else {
                 if (err.name === "SequelizeValidationError"){
-                    res.status(400).json({
-                        statusCode : 400,
+                    res.status(500).json({
+                        statusCode : 500,
                         error : err.errors[0].message
                     })
                 } else {
